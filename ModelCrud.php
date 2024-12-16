@@ -1,11 +1,11 @@
 <?php
 
-class ModelCRUDodel extends ObjectModel
+class ModelCrud extends ObjectModel
 {
     private function installDb()
     {
 
-        $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'fifelity_table` (
+        $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'fidelity_table` (
         `idCustomer` INT(11) NOT NULL AUTO_INCREMENT,
         `fidelityPoints` INT(255) NOT NULL,
         PRIMARY KEY (`idCustomer`)
@@ -21,7 +21,7 @@ class ModelCRUDodel extends ObjectModel
             'Failed to create table `' . _DB_PREFIX_ . 'custom_table`. Error: ' . $e->getMessage(),
             3,
             null,
-            'MyModuleCrud',
+            'ModuleCrud',
             (int)$this->id
             );
             return false;

@@ -1,12 +1,12 @@
 <?php
 
-require_once __DIR__ . '/ModelCRUD.php';
+require_once __DIR__ . '/ModelCrud.php';
 
 
 if(!defined('_PS_VERSION_')){
     exit;
 }
-class MyProjectModule extends Module {
+class ProjectModule extends Module {
     public function __construct() {
         $this->name = 'myprojectmodule';
         $this->tab = 'front_office_features';
