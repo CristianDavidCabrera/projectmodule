@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/ModelCrud.php';
+/*require_once __DIR__ . '/ModelCrud.php';*/
 
 
 if(!defined('_PS_VERSION_')){
@@ -8,7 +8,7 @@ if(!defined('_PS_VERSION_')){
 }
 class ProjectModule extends Module {
     public function __construct() {
-        $this->name = 'myprojectmodule';
+        $this->name = 'projectmodule';
         $this->tab = 'front_office_features';
         $this->version = '1.0.0';
         $this->author = 'Cristian Cabrera';
@@ -40,6 +40,38 @@ class ProjectModule extends Module {
             return false;
         }
         return true;
+    }
+
+    private function installDb()
+    {
+
+        $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'fidelity_table` (
+            `id_costumer` INT(11) NOT NULL AUTO_INCREMENT,
+            `name` INT(255) NOT NULL,
+            PRIMARY KEY (`id_costumer`)
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
+
+        try {
+            if (!Db::getInstance()->execute($sql)) {
+                throw new Exception('Table creation failed');
+            }
+            return true;
+        } catch (Exception $e) {
+            PrestaShopLogger::addLog(
+                'Failed to create table `' . _DB_PREFIX_ . 'custom_table`. Error: ' . $e->getMessage(),
+                3,
+                null,
+                'MyModuleCrud',
+                (int)$this->id
+            );
+            return false;
+        }
+    }
+
+    private function uninstallDb()
+    {
+        $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'fidelity_table`;';
+        return Db::getInstance()->execute($sql);
     }
 
 }
