@@ -1,6 +1,6 @@
 <?php
 
-/*require_once __DIR__ . '/ModelCrud.php';*/
+require_once __DIR__ . '/ModelCrud.php';
 
 
 if(!defined('_PS_VERSION_')){
@@ -26,7 +26,8 @@ class ProjectModule extends Module {
     {
         if (!parent::install() ||
             !Configuration::updateValue('NEW_MODULE_CONFIG', 'value') ||
-            !$this->installDb()) {
+            !$this->installDb() ||
+            !$this->installTab()) {
             return false;
         }
         return true;
@@ -42,12 +43,25 @@ class ProjectModule extends Module {
         return true;
     }
 
+    private function installTab()
+    {
+        $tab = new Tab();
+        $tab->class_name = 'AdminProjectModule'; // Nombre del controlador
+        $tab->module = $this->name;
+        $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentModulesSf'); // Submenú de Módulos
+        $tab->name = [];
+        foreach (Language::getLanguages(false) as $lang) {
+            $tab->name[$lang['id_lang']] = 'Points List'; // Nombre de la página en el menú
+        }
+        return $tab->save();
+    }
+
     private function installDb()
     {
 
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'fidelity_table` (
             `id_costumer` INT(11) NOT NULL AUTO_INCREMENT,
-            `name` INT(255) NOT NULL,
+            `points` INT NOT NULL,
             PRIMARY KEY (`id_costumer`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
@@ -61,7 +75,7 @@ class ProjectModule extends Module {
                 'Failed to create table `' . _DB_PREFIX_ . 'custom_table`. Error: ' . $e->getMessage(),
                 3,
                 null,
-                'MyModuleCrud',
+                'ModuleCrud',
                 (int)$this->id
             );
             return false;
@@ -73,6 +87,13 @@ class ProjectModule extends Module {
         $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'fidelity_table`;';
         return Db::getInstance()->execute($sql);
     }
+
+  /*  public function getContent()
+    {
+
+        return $this->display(__FILE__, 'views/templates/admin/points_list.tpl');
+    }*/
+
 
 }
 
