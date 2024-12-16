@@ -19,6 +19,10 @@ class ProjectModule extends Module {
         $this->description ='Module project';
         $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
 
+        if (!$this->translator) {
+            $this->translator = $this->getTranslator();
+        }
+
         parent::__construct();
     }
 
@@ -27,32 +31,23 @@ class ProjectModule extends Module {
         if (!parent::install() ||
             !Configuration::updateValue('NEW_MODULE_CONFIG', 'value') ||
             !$this->installDb() ||
-            !$this->installTab()) {
+            !$this->registerTab()) {
             return false;
         }
         return true;
     }
 
-    public function uninstall()
-    {
-        if (!$this->uninstallDb() ||
-            !Configuration::deleteByName('NEW_MODULE_CONFIG') ||
-            !parent::uninstall()) {
-            return false;
-        }
-        return true;
-    }
-
-    private function installTab()
+    private function registerTab()
     {
         $tab = new Tab();
         $tab->class_name = 'AdminProjectModule'; // Nombre del controlador
         $tab->module = $this->name;
-        $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentModulesSf'); // Submenú de Módulos
+        $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentCustomer');
         $tab->name = [];
-        foreach (Language::getLanguages(false) as $lang) {
-            $tab->name[$lang['id_lang']] = 'Points List'; // Nombre de la página en el menú
+        foreach (Language::getLanguages(true) as $lang) {
+            $tab->name[$lang['id_lang']] = 'Puntos de Fidelidad';
         }
+
         return $tab->save();
     }
 
@@ -80,6 +75,16 @@ class ProjectModule extends Module {
             );
             return false;
         }
+    }
+
+    public function uninstall()
+    {
+        if (!$this->uninstallDb() ||
+            !Configuration::deleteByName('NEW_MODULE_CONFIG') ||
+            !parent::uninstall()) {
+            return false;
+        }
+        return true;
     }
 
     private function uninstallDb()
