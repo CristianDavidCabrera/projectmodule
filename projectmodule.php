@@ -92,39 +92,30 @@ class ProjectModule extends Module {
         return Db::getInstance()->execute($sql);
     }
 
-  /*  public function getContent()
-    {
+    public function hookActionValidateOrder($params){
 
-        return $this->display(__FILE__, 'views/templates/admin/points_list.tpl');
-    }*/
-
-
-public function hookActionValidateOrder($params){
-
-    $id_customer = $params['customer']->id;
-    $id_order = (float)$params['order']->total_paid;
-    $points = floor($id_order*0.5);
+        $id_customer = $params['customer']->id;
+        $id_order = (float)$params['order']->total_paid;
+        $points = floor($id_order*0.5);
 
 
-    $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'fidelity_table (id_customer, points)
-            VALUES (' . $id_customer . ', ' . $points . ')
-            ON DUPLICATE KEY UPDATE points = points + ' . $points . ';';
+        $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'fidelity_table (id_customer, points)
+                VALUES (' . $id_customer . ', ' . $points . ')
+                ON DUPLICATE KEY UPDATE points = points + ' . $points . ';';
 
-        return Db::getInstance()->execute($sql);
+            return Db::getInstance()->execute($sql);
 
-}
+    }
 
     public function hookDisplayCustomerAccount($params)    {
         $link = Context::getContext()->link->getModuleLink('projectmodule', 'Points');
         return '<a class="col-lg-4 col-md-6 col-sm-6 col-xs-12"  href="'.$link.'">
                   <span class="link-item">
                     <i class="material-icons">star</i>
-                    Mi lista de puntos
+                        Mi lista de puntos
                   </span>
-                  
                 </a>';
-}
-
+    }
 
 
 }

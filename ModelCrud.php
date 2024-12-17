@@ -66,12 +66,8 @@ class ModelCrud extends ObjectModel
     }*/
 
 
-
-
-
     public function renderList()
     {
-        // Usa el HelperList de PrestaShop
         $helper = new HelperList();
         $helper->shopLinkType = '';
         $helper->simple_header = true;
@@ -83,8 +79,6 @@ class ModelCrud extends ObjectModel
         $helper->table = $this->table;
         $helper->title = 'Lista de Puntos de Fidelización';
         $helper->token = $this->token;
-       /* $helper->currentIndex = $this->context->link->getAdminLink(projectmodule,Points);*/
-        //$this->context->link->getAdminLink('ProjectModulePointsModuleAdminController');
 
         $fields = [
             'id_customer' => ['title' => 'ID Cliente', 'type' => 'int'],
@@ -95,7 +89,6 @@ class ModelCrud extends ObjectModel
 
         return $helper->generateList($records, $fields);
     }
-
 
     public function processEdit()
     {
@@ -112,7 +105,6 @@ class ModelCrud extends ObjectModel
 
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
     }
-
 
 }
 

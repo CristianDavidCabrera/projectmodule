@@ -19,11 +19,11 @@ class ProjectmodulePointsModuleFrontController extends ModuleFrontController
         $this->setTemplate('module:projectmodule/views/templates/front/fidelity.tpl');
     }
 
-
     public static function readRecordById($id_customer)
     {
         $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'fidelity_table` WHERE `id_customer` = ' . (int)$id_customer;
-        return Db::getInstance()->getRow($sql);
+       return Db::getInstance()->getRow($sql);
     }
+
 
 }

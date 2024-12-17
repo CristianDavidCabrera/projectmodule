@@ -10,6 +10,8 @@
                     <tr>
                         <th>{l s='ID Cliente'}</th>
                         <th>{l s='Puntos'}</th>
+                        <th>{l s='Nombre'}</th>
+                        <th>{l s='Apellidos'}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -17,6 +19,8 @@
                         <tr>
                             <td>{$record.id_customer}</td>
                             <td>{$record.points}</td>
+                            <td>{$record.firstname}</td>
+                            <td>{$record.lastname}</td>
                         </tr>
                     {/foreach}
                     </tbody>
