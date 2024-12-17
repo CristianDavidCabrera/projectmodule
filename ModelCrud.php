@@ -8,14 +8,14 @@ if (!defined('_PS_VERSION_')) {
 class ModelCrud extends ObjectModel
 {
 
-    public $id_costumer;
+    public $id_customer;
     public $points;
 
     public static $definition = [
         'table' => 'fidelity_table',
-        'primary' => 'id_costumer',
+        'primary' => 'id_customer',
         'fields' => [
-            'id_costumer' => [
+            'id_customer' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
                 'required' => true,
@@ -66,11 +66,7 @@ class ModelCrud extends ObjectModel
     }*/
 
 
-    public static function readAllRecords()
-    {
-        $sql = 'SELECT * FROM '._DB_PREFIX_.'fidelity_table';
-        return Db::getInstance()->executeS($sql);
-    }
+
 
 
     public function renderList()
@@ -83,15 +79,16 @@ class ModelCrud extends ObjectModel
         $helper->actions = ['edit', 'delete'];
         $helper->listTotal = count(ModelCrud::readAllRecords());
 
-        $helper->identifier = 'id_customer'; // Columna clave primaria
+        $helper->identifier = 'id_customer';
         $helper->table = $this->table;
-        $helper->title = $this->l('Lista de Puntos de Fidelización');
-        $helper->token = $this->token; // Token de seguridad
-        $helper->currentIndex = $this->context->link->getAdminLink($this->controller_name);
+        $helper->title = 'Lista de Puntos de Fidelización';
+        $helper->token = $this->token;
+       /* $helper->currentIndex = $this->context->link->getAdminLink(projectmodule,Points);*/
+        //$this->context->link->getAdminLink('ProjectModulePointsModuleAdminController');
 
         $fields = [
-            'id_customer' => ['title' => $this->l('ID Cliente'), 'type' => 'int'],
-            'points' => ['title' => $this->l('Puntos'), 'type' => 'int', 'editable' => true]
+            'id_customer' => ['title' => 'ID Cliente', 'type' => 'int'],
+            'points' => ['title' => 'Puntos', 'type' => 'int', 'editable' => true]
         ];
 
         $records = ModelCrud::readAllRecords();
@@ -110,7 +107,7 @@ class ModelCrud extends ObjectModel
                 'points' => $points
             ], 'id_customer = '.$id_customer);
         } else {
-            $this->errors[] = $this->l('Error al actualizar los puntos.');
+            $this->errors[] = 'Error al actualizar los puntos.';
         }
 
         Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);

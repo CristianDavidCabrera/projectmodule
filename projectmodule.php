@@ -19,10 +19,6 @@ class ProjectModule extends Module {
         $this->description ='Module project';
         $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
 
-        if (!$this->translator) {
-            $this->translator = $this->getTranslator();
-        }
-
         parent::__construct();
     }
 
@@ -31,19 +27,22 @@ class ProjectModule extends Module {
         if (!parent::install() ||
             !Configuration::updateValue('NEW_MODULE_CONFIG', 'value') ||
             !$this->installDb() ||
-            !$this->registerTab()) {
+            !$this->registerTab() ||
+            !$this->registerHook('actionValidateOrder') ||
+            !$this->registerHook('displayCustomerAccount') ) {
             return false;
         }
         return true;
     }
 
-    private function registerTab()
+   private function registerTab()
     {
         $tab = new Tab();
-        $tab->class_name = 'AdminProjectModule'; // Nombre del controlador
+        $tab->class_name = 'Points'; // Nombre del controlador
         $tab->module = $this->name;
         $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentCustomer');
-        $tab->name = [];
+      /*  $tab->name='Puntos de fidelidad';*/
+       $tab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $tab->name[$lang['id_lang']] = 'Puntos de Fidelidad';
         }
@@ -55,9 +54,9 @@ class ProjectModule extends Module {
     {
 
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'fidelity_table` (
-            `id_costumer` INT(11) NOT NULL AUTO_INCREMENT,
+            `id_customer` INT(11) NOT NULL AUTO_INCREMENT,
             `points` INT NOT NULL,
-            PRIMARY KEY (`id_costumer`)
+            PRIMARY KEY (`id_customer`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
         try {
@@ -98,6 +97,34 @@ class ProjectModule extends Module {
 
         return $this->display(__FILE__, 'views/templates/admin/points_list.tpl');
     }*/
+
+
+public function hookActionValidateOrder($params){
+
+    $id_customer = $params['customer']->id;
+    $id_order = (float)$params['order']->total_paid;
+    $points = floor($id_order*0.5);
+
+
+    $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'fidelity_table (id_customer, points)
+            VALUES (' . $id_customer . ', ' . $points . ')
+            ON DUPLICATE KEY UPDATE points = points + ' . $points . ';';
+
+        return Db::getInstance()->execute($sql);
+
+}
+
+    public function hookDisplayCustomerAccount($params)    {
+        $link = Context::getContext()->link->getModuleLink('projectmodule', 'Points');
+        return '<a class="col-lg-4 col-md-6 col-sm-6 col-xs-12"  href="'.$link.'">
+                  <span class="link-item">
+                    <i class="material-icons">star</i>
+                    Mi lista de puntos
+                  </span>
+                  
+                </a>';
+}
+
 
 
 }
