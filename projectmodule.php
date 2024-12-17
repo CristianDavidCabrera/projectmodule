@@ -29,7 +29,8 @@ class ProjectModule extends Module {
             !$this->installDb() ||
             !$this->registerTab() ||
             !$this->registerHook('actionValidateOrder') ||
-            !$this->registerHook('displayCustomerAccount') ) {
+            !$this->registerHook('displayCustomerAccount') ||
+            !$this->registerHook('displayOrderConfirmation')) {
             return false;
         }
         return true;
@@ -117,6 +118,26 @@ class ProjectModule extends Module {
                 </a>';
     }
 
+
+
+        public function getPoints($id_customer)
+        {
+            $sql = 'SELECT points FROM ' . _DB_PREFIX_ . 'fidelity_table WHERE id_customer = ' . (int)$id_customer;
+            $result = Db::getInstance()->getRow($sql);
+            return $result ? $result['points'] : 0;
+        }
+
+    
+    public function hookDisplayOrderConfirmation($params)
+    {
+        
+        $customer = $this->context->customer->id;
+        $points = $this->getPoints($customer);
+
+        return '<h3 class="h1 card-title">
+                <i class="material-icons rtl-no-flip done"></i>You earned '.$points.' points
+              </h3>';
+    }
 
 }
 
