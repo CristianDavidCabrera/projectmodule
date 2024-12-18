@@ -135,7 +135,7 @@ class ProjectModule extends Module {
         $points = $this->getPoints($customer);
 
         return '<h3 class="h1 card-title">
-                <i class="material-icons rtl-no-flip done"></i>You earned '.$points.' points
+                <i class="material-icons rtl-no-flip done"></i>You have a total of '.$points.'  points for your purchases
               </h3>';
     }
 
