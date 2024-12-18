@@ -5,11 +5,8 @@ class ProjectmodulePointsModuleFrontController extends ModuleFrontController
     {
         parent::initContent();
 
-        //Here the logic to fetch data from database or API.
         $id_customer = $this->context->customer->id;
-
         $pointsData = $this->readRecordById($id_customer);
-
         if ($pointsData) {
             $points = $pointsData['points'];
         } else {
@@ -24,6 +21,5 @@ class ProjectmodulePointsModuleFrontController extends ModuleFrontController
         $sql = 'SELECT * FROM `' . _DB_PREFIX_ . 'fidelity_table` WHERE `id_customer` = ' . (int)$id_customer;
        return Db::getInstance()->getRow($sql);
     }
-
 
 }

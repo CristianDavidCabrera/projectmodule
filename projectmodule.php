@@ -42,7 +42,6 @@ class ProjectModule extends Module {
         $tab->class_name = 'Points'; // Nombre del controlador
         $tab->module = $this->name;
         $tab->id_parent = (int)Tab::getIdFromClassName('AdminParentCustomer');
-      /*  $tab->name='Puntos de fidelidad';*/
        $tab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
             $tab->name[$lang['id_lang']] = 'Puntos de Fidelidad';
@@ -53,7 +52,6 @@ class ProjectModule extends Module {
 
     private function installDb()
     {
-
         $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'fidelity_table` (
             `id_customer` INT(11) NOT NULL AUTO_INCREMENT,
             `points` INT NOT NULL,
@@ -99,7 +97,6 @@ class ProjectModule extends Module {
         $id_order = (float)$params['order']->total_paid;
         $points = floor($id_order*0.5);
 
-
         $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'fidelity_table (id_customer, points)
                 VALUES (' . $id_customer . ', ' . $points . ')
                 ON DUPLICATE KEY UPDATE points = points + ' . $points . ';';
@@ -118,15 +115,12 @@ class ProjectModule extends Module {
                 </a>';
     }
 
-
-
-        public function getPoints($id_customer)
-        {
-            $sql = 'SELECT points FROM ' . _DB_PREFIX_ . 'fidelity_table WHERE id_customer = ' . (int)$id_customer;
-            $result = Db::getInstance()->getRow($sql);
-            return $result ? $result['points'] : 0;
-        }
-
+    public function getPoints($id_customer)
+    {
+        $sql = 'SELECT points FROM ' . _DB_PREFIX_ . 'fidelity_table WHERE id_customer = ' . (int)$id_customer;
+        $result = Db::getInstance()->getRow($sql);
+        return $result ? $result['points'] : 0;
+    }
     
     public function hookDisplayOrderConfirmation($params)
     {
@@ -140,4 +134,3 @@ class ProjectModule extends Module {
     }
 
 }
-
